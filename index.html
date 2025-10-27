@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GageFx Credentials</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #2c5282;
+      --primary-light: #3182ce;
+      --primary-dark: #1a365d;
+      --success: #16a34a;
+      --success-light: #dcfce7;
+      --success-border: #bbf7d0;
+      --bg-light: #f8fafc;
+      --border: #e2e8f0;
+      --text: #2d3748;
+      --text-light: #4a5568;
+      --text-muted: #718096;
+      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --transition: all 0.2s ease;
+      --label-bg: #edf2f7;
+      --label-color: #4a5568;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f0f4f8 0%, #e6edf5 100%);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 0;
+    }
+
+    .header {
+      text-align: center;
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: var(--card-shadow);
+      width: 100%;
+    }
+
+    .header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .header p {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.4;
+    }
+
+    .search-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    #search {
+      width: 100%;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      font-size: 14px;
+      outline: none;
+      transition: var(--transition);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      background: white;
+    }
+
+    #search:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
+    }
+
+    .user-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      width: 100%;
+    }
+
+    .user-card {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 16px;
+      transition: var(--transition);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    .user-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-color: var(--primary-light);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .username {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--primary-dark);
+      word-break: break-all;
+    }
+
+    .email {
+      color: var(--text-light);
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
+    .card-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .card-item {
+      margin-bottom: 10px;
+    }
+
+    .card-label {
+      display: inline-block;
+      background: var(--label-bg);
+      color: var(--label-color);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 3px 6px;
+      border-radius: 5px;
+      margin-bottom: 4px;
+    }
+
+    .card-value {
+      font-size: 0.9rem;
+      color: var(--text);
+      word-break: break-word;
+      min-height: 1.2em;
+    }
+
+    .role-highlight {
+      color: var(--success);
+      font-weight: 600;
+      background: var(--success-light);
+      padding: 3px 6px;
+      border-radius: 5px;
+      display: inline-block;
+    }
+
+    .password-container {
+      grid-column: span 2;
+    }
+
+    .password-display {
+      font-family: monospace;
+      letter-spacing: 1px;
+      font-size: 13px;
+      min-height: 18px;
+      margin-bottom: 10px;
+      padding: 8px;
+      background: var(--bg-light);
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      font-weight: 600;
+    }
+
+    .password-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* Copy Button */
+    .copy-btn {
+      background: #ebf4ff;
+      color: var(--primary-light);
+      border: 1px solid #bee3f8;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
+      font-weight: 600;
+    }
+
+    .copy-btn:hover {
+      background: #dbeafe;
+      border-color: #93c5fd;
+    }
+
+    .copy-btn.copied {
+      background: var(--success-light);
+      color: var(--success);
+      border-color: var(--success-border);
+    }
+
+    .toggle-visibility {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 6px;
+      border-radius: 5px;
+      transition: var(--transition);
+    }
+
+    .toggle-visibility:hover {
+      background: var(--bg-light);
+      color: var(--text);
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 10px;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      background: white;
+      border-radius: 10px;
+      padding: 12px;
+      box-shadow: var(--card-shadow);
+      width: 100%;
+    }
+
+    @media (max-width: 1200px) {
+      .user-cards {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      .user-cards {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      }
+      
+      .card-body {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      
+      .password-container {
+        grid-column: span 1;
+      }
+      
+      .header h1 {
+        font-size: 1.3rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 0;
+      }
+      
+      .user-card {
+        padding: 12px;
+      }
+      
+      .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1><i class="fas fa-key"></i> GageFx Credentials</h1>
+      <p>Secure access details for all GageFx application users. Copy credentials with one click.</p>
+    </div>
+
+    <div class="search-container">
+      <input type="text" id="search" placeholder="Search by username, role, department, or email..." onkeyup="searchCards()" />
+    </div>
+
+    <div class="user-cards" id="userCards">
+      <!-- Cards injected by JS -->
+    </div>
+
+    <div class="footer-note">
+      <p>🔒 All credentials are for internal use only. Do not share externally.</p>
+    </div>
+  </div>
+
+  <script>
+    const users = [
+      { username: "itadmin.system", password: "it123", roles: "IT_ADMIN", depts: "-", funcs: "-", ops: "-", email: "soumik@swajyot.co.in" },
+      { username: "admin.system", password: "admin123", roles: "ROLE_ADMIN", depts: "-", funcs: "-", ops: "-", email: "admin@swajyot.co.in" },
+      { username: "planthod.system", password: "hod123", roles: "PLANT_HOD", depts: "-", funcs: "-", ops: "-", email: "onlinekazama19@gmail.com" },
+      { username: "calibartion.system", password: "calibaration123", roles: "ROLE_CALIBRATION_MANAGER", depts: "-", funcs: "-", ops: "-", email: "nandini@swajyot.co.in" },
+      { username: "user.system", password: "user123", roles: "ROLE_USER", depts: "Engineering", funcs: "f1, f2, f3", ops: "ot1, ot2", email: "abc@swajyot.co.in" },
+      { username: "manager.system", password: "manager123", roles: "ROLE_MANAGER", depts: "Tooling, Engineering", funcs: "f1, f2, f3", ops: "ot1, ot2, ot3", email: "jui@swajyot.co.in" },
+      { username: "storemanager.system", password: "store123", roles: "ROLE_STORE_MANAGER", depts: "Machining", funcs: "f1, f2", ops: "ot2, ot3", email: "sanket@swajyot.co.in" },
+      { username: "operator.system", password: "operator123", roles: "ROLE_OPERATOR", depts: "Quality", funcs: "f1", ops: "ot1", email: "priya@swajyot.co.in" },
+      { username: "operator2.system", password: "operator234", roles: "ROLE_OPERATOR", depts: "Tooling, Engineering", funcs: "f1, f3", ops: "ot1, ot3", email: "arjun@swajyot.co.in" },
+      { username: "user2.system", password: "user234", roles: "ROLE_USER", depts: "Machining", funcs: "f2, f3", ops: "ot2, ot3", email: "divya@swajyot.co.in" },
+      { username: "manager2.system", password: "manager234", roles: "ROLE_MANAGER", depts: "Tooling, Machining", funcs: "f1, f2", ops: "ot1, ot2", email: "rahul@swajyot.co.in" },
+      { username: "storemanager2.system", password: "store234", roles: "ROLE_STORE_MANAGER", depts: "Quality, Machining", funcs: "f2, f3", ops: "ot1, ot2, ot3", email: "neha@swajyot.co.in" },
+      { username: "operator3.system", password: "operator345", roles: "ROLE_OPERATOR", depts: "Engineering", funcs: "f2", ops: "ot2", email: "vikram@swajyot.co.in" },
+      { username: "operator4.system", password: "operator456", roles: "ROLE_OPERATOR", depts: "Engineering, Machining, Tooling", funcs: "f1, f2, f3", ops: "ot1, ot2, ot3", email: "nootan@swajyot.co.in" },
+      { username: "user3.system", password: "user345", roles: "ROLE_USER", depts: "Engineering, Tooling", funcs: "f1, f3", ops: "ot1, ot3", email: "aditya@swajyot.co.in" },
+      { username: "manager3.system", password: "manager345", roles: "ROLE_MANAGER", depts: "Machining", funcs: "f2, f3", ops: "ot2, ot3", email: "ananya@swajyot.co.in" },
+      { username: "storemanager3.system", password: "store345", roles: "ROLE_STORE_MANAGER", depts: "Quality, Engineering", funcs: "f1, f3", ops: "ot1, ot2", email: "karan@swajyot.co.in" },
+      { username: "operator5.system", password: "operator567", roles: "ROLE_OPERATOR", depts: "Engineering", funcs: "f2", ops: "ot2", email: "riya@swajyot.co.in" },
+      { username: "operatorF1OT1.system", password: "operator123", roles: "ROLE_OPERATOR", depts: "Engineering", funcs: "-", ops: "ot1", email: "tanvi@swajyot.co.in" }
+    ];
+
+    function renderCards() {
+      const container = document.getElementById("userCards");
+      container.innerHTML = "";
+
+      users.forEach(user => {
+        const card = document.createElement("div");
+        card.className = "user-card";
+        card.dataset.username = user.username;
+        card.dataset.roles = user.roles;
+        card.dataset.depts = user.depts;
+        card.dataset.email = user.email;
+
+        card.innerHTML = `
+          <div class="card-header">
+            <div>
+              <div class="username">${user.username}</div>
+              <div class="email">${user.email}</div>
+            </div>
+            <button class="copy-btn" data-value="${user.username}" title="Copy username">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="card-item">
+              <div class="card-label">Role(s)</div>
+              <div class="card-value"><span class="role-highlight">${user.roles}</span></div>
+            </div>
+            <div class="card-item">
+              <div class="card-label">Department(s)</div>
+              <div class="card-value">${user.depts}</div>
+            </div>
+            <div class="card-item">
+              <div class="card-label">Function(s)</div>
+              <div class="card-value">${user.funcs}</div>
+            </div>
+            <div class="card-item">
+              <div class="card-label">Operation(s)</div>
+              <div class="card-value">${user.ops}</div>
+            </div>
+            <div class="password-container">
+              <div class="card-label">Password</div>
+              <div class="password-display masked" data-password="${user.password}">••••••••</div>
+              <div class="password-actions">
+                <button class="toggle-visibility" title="Show password">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="copy-btn" data-value="${user.password}" title="Copy password">
+                  <i class="fas fa-copy"></i> Copy
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      attachEventListeners();
+    }
+
+    function attachEventListeners() {
+      document.querySelectorAll(".copy-btn").forEach(btn => {
+        btn.addEventListener("click", async (e) => {
+          const text = btn.getAttribute("data-value");
+          try {
+            await navigator.clipboard.writeText(text);
+            btn.classList.add("copied");
+            btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            setTimeout(() => {
+              btn.classList.remove("copied");
+              btn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+            }, 2000);
+          } catch (err) {
+            console.error("Copy failed:", err);
+          }
+        });
+      });
+
+      document.querySelectorAll(".toggle-visibility").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const display = btn.closest(".password-actions").previousElementSibling;
+          const isMasked = display.classList.contains("masked");
+
+          if (isMasked) {
+            display.textContent = display.getAttribute("data-password");
+            display.classList.remove("masked");
+            btn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            btn.title = "Hide password";
+          } else {
+            display.textContent = "••••••••";
+            display.classList.add("masked");
+            btn.innerHTML = '<i class="fas fa-eye"></i>';
+            btn.title = "Show password";
+          }
+        });
+      });
+    }
+
+    function searchCards() {
+      const query = document.getElementById("search").value.toLowerCase();
+      const cards = document.querySelectorAll(".user-card");
+
+      cards.forEach(card => {
+        const username = card.dataset.username.toLowerCase();
+        const roles = card.dataset.roles.toLowerCase();
+        const depts = card.dataset.depts.toLowerCase();
+        const email = card.dataset.email.toLowerCase();
+        
+        const matches = username.includes(query) || 
+                       roles.includes(query) || 
+                       depts.includes(query) || 
+                       email.includes(query);
+        
+        card.style.display = matches ? "block" : "none";
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", renderCards);
+  </script>
+</body>
+</html>
